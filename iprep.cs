@@ -10,30 +10,41 @@ namespace iprep
     class Program
     {
         private static readonly HttpClient client = new HttpClient();
-        private static async Task<List<Repository>> ProcessRepositories()
+        private static async Task<List<AIPDB_Check_Root>> AbuseIPDBCheck()
         {
+            HttpResponseMessage resp; //--init response message obj
+            
+            //--set default headers for the httpclient. Might want to change this to be set by req
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(
-                new MediaTypeWithQualityHeaderValue("application/vnd.github.v3+json"));
-            client.DefaultRequestHeaders.Add("User-Agent", ".NET Foundation Repository Reporter");
+                new MediaTypeWithQualityHeaderValue("application/json"));
+            client.DefaultRequestHeaders.Add("User-Agent", "IPRep v1.0");
 
-            var streamTask = client.GetStreamAsync("https://api.github.com/orgs/dotnet/repos");
-            var repositories = await JsonSerializer.DeserializeAsync<List<Repository>>(await streamTask);
+            //--init request message obj
+            var req = new HttpRequestMessage(HttpMethod.Get, "https://api.abuseipdb.com/api/v2/check?ipAddress=118.25.6.39&maxAgeInDays=90&verbose=");
+            req.Headers.Add("Key", "8175b186eddc007421cd35de6d8f29214ca208d9a7f35d596bc18529cf8f64b388a1f199ad314c0f");
+
+            //--Send request async through httpclient
+            resp = await client.SendAsync(req);
+            var responseBody = await resp.Content.ReadAsStringAsync();
+
+            //string strresp = "\"" + resp.ToString() + "\"";
+            var repositories = JsonSerializer.Deserialize<List<AIPDB_Check_Root>>(responseBody);
             return repositories;
+
+            //--Used when it was just an HttpClient obj without HttpRequestMessage obj. Second line for Json Deserialization
+            //var streamTask = client.GetStreamAsync("https://api.abuseipdb.com/api/v2/check");
+            //var repositories = await JsonSerializer.DeserializeAsync<List<Repository>>(await streamTask);
+            //return repositories;
         }
 
         public static async Task Main(string[] args)
         {
-            var repositories = await ProcessRepositories();
+            var repositories = await AbuseIPDBCheck();
 
             foreach (var repo in repositories)
             {
-                Console.WriteLine(repo.Name);
-                Console.WriteLine(repo.Description);
-                Console.WriteLine(repo.GitHubHomeUrl);
-                Console.WriteLine(repo.Homepage);
-                Console.WriteLine(repo.Watchers);
-                Console.WriteLine(repo.LastPush);
+                Console.WriteLine(repo.data);
                 Console.WriteLine();
             }
         }
