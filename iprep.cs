@@ -22,7 +22,7 @@ namespace iprep
 
             //--init request message obj
             var req = new HttpRequestMessage(HttpMethod.Get, "https://api.abuseipdb.com/api/v2/check?ipAddress=118.25.6.39&maxAgeInDays=90&verbose=");
-            req.Headers.Add("Key", "8175b186eddc007421cd35de6d8f29214ca208d9a7f35d596bc18529cf8f64b388a1f199ad314c0f");
+            req.Headers.Add("Key", "KEY_GOES_HERE");
 
             //--Send request async through httpclient
             resp = await client.SendAsync(req);
