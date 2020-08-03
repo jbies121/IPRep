@@ -30,9 +30,6 @@ namespace iprep
             AIPDB_Check_Root repositories = JsonConvert.DeserializeObject<AIPDB_Check_Root>(responseBody);
 
             return repositories;
-            //--JsonSerializer not working. Throwing error that responseBody string cannot be converted to List
-            //var repositories = JsonSerializer.Deserialize<List<AIPDB_Check_Root>>(responseBody, options);
-            //return repositories;
         }
 
         public static async Task Main(string[] args)
