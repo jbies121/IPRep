@@ -4,38 +4,46 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Collections.Generic;
 using System.Text.Json;
+using System.Runtime.Serialization.Json;
+using Newtonsoft.Json;
 
 namespace iprep
 {
     class Program
     {
         private static readonly HttpClient client = new HttpClient();
-        private static async Task<List<Repository>> ProcessRepositories()
+        private static async Task<AIPDB_Check_Root> AbuseIPDBCheck()
         {
+            HttpResponseMessage resp; //--init response message obj
+
+            //--set default headers for the httpclient. Might want to change this to be set by req
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(
-                new MediaTypeWithQualityHeaderValue("application/vnd.github.v3+json"));
-            client.DefaultRequestHeaders.Add("User-Agent", ".NET Foundation Repository Reporter");
+                new MediaTypeWithQualityHeaderValue("application/json"));
+            client.DefaultRequestHeaders.Add("User-Agent", "IPRep v1.0");
 
-            var streamTask = client.GetStreamAsync("https://api.github.com/orgs/dotnet/repos");
-            var repositories = await JsonSerializer.DeserializeAsync<List<Repository>>(await streamTask);
+            //--init request message obj
+            var req = new HttpRequestMessage(HttpMethod.Get, "https://api.abuseipdb.com/api/v2/check?ipAddress=118.25.6.39&maxAgeInDays=90&verbose=");
+            req.Headers.Add("Key", "GET_YOUR_OWN");
+
+            //--Send request async through httpclient
+            resp = await client.SendAsync(req);
+            var responseBody = await resp.Content.ReadAsStringAsync();
+
+            AIPDB_Check_Root repositories = JsonConvert.DeserializeObject<AIPDB_Check_Root>(responseBody);
+
             return repositories;
+            //--JsonSerializer not working. Throwing error that responseBody string cannot be converted to List
+            //var repositories = JsonSerializer.Deserialize<List<AIPDB_Check_Root>>(responseBody, options);
+            //return repositories;
         }
 
         public static async Task Main(string[] args)
         {
-            var repositories = await ProcessRepositories();
+            var repositories = await AbuseIPDBCheck();
 
-            foreach (var repo in repositories)
-            {
-                Console.WriteLine(repo.Name);
-                Console.WriteLine(repo.Description);
-                Console.WriteLine(repo.GitHubHomeUrl);
-                Console.WriteLine(repo.Homepage);
-                Console.WriteLine(repo.Watchers);
-                Console.WriteLine(repo.LastPush);
-                Console.WriteLine();
-            }
+            Console.WriteLine(repositories.data.ipAddress);
+            
         }
     }
 }
