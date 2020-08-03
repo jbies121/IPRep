@@ -5,6 +5,7 @@ using System.Net.Http.Headers;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Runtime.Serialization.Json;
+using Newtonsoft.Json;
 
 namespace iprep
 {
@@ -23,17 +24,16 @@ namespace iprep
 
             //--init request message obj
             var req = new HttpRequestMessage(HttpMethod.Get, "https://api.abuseipdb.com/api/v2/check?ipAddress=118.25.6.39&maxAgeInDays=90&verbose=");
-            req.Headers.Add("Key", "fd1907dee8bba0772a69b2ce41990f21ff52347612f580cc35594c88ad93070ac69da9ea459752af");
+            req.Headers.Add("Key", "GET_YOUR_OWN");
 
             //--Send request async through httpclient
             resp = await client.SendAsync(req);
-            var responseBody = await resp.Content.ReadAsStreamAsync();
+            var responseBody = await resp.Content.ReadAsStringAsync();
 
-            DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(AIPDB_Check_Root));
-            AIPDB_Check_Root repositories = (AIPDB_Check_Root)deserializer.ReadObject(responseBody);
+            AIPDB_Check_Root repositories = JsonConvert.DeserializeObject<AIPDB_Check_Root>(responseBody);
 
             return repositories;
-            //--Deserialize Json not working. Throwing error that responseBody string cannot be converted to List
+            //--JsonSerializer not working. Throwing error that responseBody string cannot be converted to List
             //var repositories = JsonSerializer.Deserialize<List<AIPDB_Check_Root>>(responseBody, options);
             //return repositories;
         }
@@ -42,7 +42,7 @@ namespace iprep
         {
             var repositories = await AbuseIPDBCheck();
 
-            Console.WriteLine(repositories);
+            Console.WriteLine(repositories.data.ipAddress);
             
         }
     }
