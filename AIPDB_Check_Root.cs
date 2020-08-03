@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace iprep
+﻿namespace iprep
 {
     public class AIPDB_Check_Root
     {
