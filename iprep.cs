@@ -37,10 +37,32 @@ namespace iprep
 
         public static async Task Main(string[] args)
         {
-            string cli = args[0];
-            var repositories = await AbuseIPDBCheck(cli);
+            string ip = null;
+            string attr = null;
 
-            Console.WriteLine(repositories.data.countryName);
+            if (args.Length != 0)
+            {
+                ip = args[0];
+                if (args.Length > 1)
+                {
+                    attr = args[1];
+                }
+            }
+
+            var repositories = await AbuseIPDBCheck(ip);
+
+            switch (attr)
+            {
+                case "country":
+                    Console.WriteLine(repositories.data.countryName);
+                    break;
+                case "confidence":
+                    Console.WriteLine(repositories.data.abuseConfidenceScore);
+                    break;
+                case null:
+                    Console.WriteLine(repositories.data);
+                    break;
+            }
             
         }
     }
