@@ -10,11 +10,11 @@ namespace iprep
 
         public string ipAddress { get; set; }
 
-        public bool isPublic { get; set; }
+        public string isPublic { get; set; }
 
         public int ipVersion { get; set; }
 
-        public bool isWhitelisted { get; set; }
+        public string isWhitelisted { get; set; }
 
         public int abuseConfidenceScore { get; set; }
 
@@ -34,7 +34,7 @@ namespace iprep
 
         public int numDistinctUsers { get; set; }
 
-        public DateTime lastReportedAt { get; set; }
+        public string lastReportedAt { get; set; }
 
         public List<AIPDB_Check_Report> reports { get; set; }
     }

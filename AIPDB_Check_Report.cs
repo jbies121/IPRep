@@ -9,7 +9,7 @@ namespace iprep
     public class AIPDB_Check_Report
     {
 
-        public DateTime reportedAt { get; set; }
+        public string reportedAt { get; set; }
 
         public string comment { get; set; }
 
