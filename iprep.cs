@@ -24,7 +24,7 @@ namespace iprep
 
             //--init request message obj
             var req = new HttpRequestMessage(HttpMethod.Get, uri);
-            req.Headers.Add("Key", "fba071ba17d24b73d559d5a703645d6697f0129aa3324ff50612a37108e261212a40a7d37e2288b8");
+            req.Headers.Add("Key", "GET_YOUR_OWN");
 
             //--Send request async through httpclient
             resp = await client.SendAsync(req);
