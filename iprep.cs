@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace iprep
 {
@@ -37,33 +38,47 @@ namespace iprep
 
         public static async Task Main(string[] args)
         {
-            string ip = null;
-            string attr = null;
+            string[] query = { "8.8.8.8", "null" };
+            bool ask = false;
 
+            // process arguments
             if (args.Length != 0)
             {
-                ip = args[0];
-                if (args.Length > 1)
+                if (args[0] == "help")
                 {
-                    attr = args[1];
+                    Console.WriteLine("Usage: <ip address> <info>");
+                    Console.WriteLine("info: country, confidence, isp");
+                } else
+                {
+                    query[0] = args[0];
+                    ask = true;
+                } if (args.Length == 2)
+                {
+                    query[1] = args[1];
                 }
             }
-
-            var repositories = await AbuseIPDBCheck(ip);
-
-            switch (attr)
+            else
             {
-                case "country":
-                    Console.WriteLine(repositories.data.countryName);
-                    break;
-                case "confidence":
-                    Console.WriteLine(repositories.data.abuseConfidenceScore);
-                    break;
-                case null:
-                    Console.WriteLine(repositories.data);
-                    break;
+                Console.WriteLine("Need an IP, goober.");
             }
-            
+
+            if (ask)
+            {
+                // Make request and get response as deserialized json object
+                var repositories = await AbuseIPDBCheck(query[0]);
+
+                //user supplied arguments
+                var actions = new Dictionary<string, Action>
+                {
+                    { "country", () => Console.WriteLine(repositories.data.countryName) },
+                    { "confidence", () => Console.WriteLine(repositories.data.abuseConfidenceScore) },
+                    { "isp", () => Console.WriteLine(repositories.data.isp) },
+                    { "null", () => Console.WriteLine(repositories.data.isp) }
+
+                };
+
+                actions[query[1]]();
+            }
         }
     }
 }
