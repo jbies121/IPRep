@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+
 
 namespace iprep
 {
@@ -38,28 +40,43 @@ namespace iprep
 
         public static async Task Main(string[] args)
         {
-            string[] query = { "8.8.8.8", "null" };
+            string[] query = new string[2];
             bool ask = false;
+
+            string help = @"Usage: <ip address> <info>
+info: country, confidence, isp";
 
             // process arguments
             if (args.Length != 0)
             {
-                if (args[0] == "help")
+                if (args[0] != "help")
                 {
-                    Console.WriteLine("Usage: <ip address> <info>");
-                    Console.WriteLine("info: country, confidence, isp");
-                } else
+                    if (IPAddress.TryParse(args[0], out IPAddress ip))
+                    {
+                        query[0] = args[0];
+                        ask = true;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Need an IP, goober.");
+                    }
+                    if (args.Length == 2)
+                    {
+                        query[1] = args[1];
+                    }
+                    else
+                    {
+                        query[1] = "null";
+                    }
+                }
+                else
                 {
-                    query[0] = args[0];
-                    ask = true;
-                } if (args.Length == 2)
-                {
-                    query[1] = args[1];
+                    Console.WriteLine(help);
                 }
             }
             else
             {
-                Console.WriteLine("Need an IP, goober.");
+                Console.WriteLine(help);
             }
 
             if (ask)
