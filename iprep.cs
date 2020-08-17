@@ -82,20 +82,29 @@ info: country, confidence, isp";
 
             if (ask)
             {
-                // Make request and get response as deserialized json object
-                var repositories = await AbuseIPDBCheck(query[0]);
+                try
+                {
+                    // Make request and get response as deserialized json object
+                    var repositories = await AbuseIPDBCheck(query[0]);
 
-                //user supplied arguments
-                var actions = new Dictionary<string, Action>
+                    //user supplied arguments
+                    var actions = new Dictionary<string, Action>
                 {
                     { "country", () => Console.WriteLine(repositories.data.countryName) },
                     { "confidence", () => Console.WriteLine(repositories.data.abuseConfidenceScore) },
                     { "isp", () => Console.WriteLine(repositories.data.isp) },
                     { "null", () => Console.WriteLine(repositories.data.isp) }
-
                 };
 
-                actions[query[1]]();
+                    actions[query[1]]();
+                }
+                catch (NullReferenceException)
+                {
+                    Console.WriteLine("There was an error with your query. Check the IP address and API key and try again.");
+                }
+                
+
+                
             }
         }
     }
