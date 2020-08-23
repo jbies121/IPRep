@@ -24,15 +24,15 @@ dotnet run [ip] [info]
 ```
 
 ### 'info' options currently available
--isPublic
--ipVersion
--isWhitelisted
--countryCode
--usageType
--isp
--domain
--hostnames
--countryName
--totalReports
--numDistinctUsers
--lastReportedAt
+- isPublic
+- ipVersion
+- isWhitelisted
+- countryCode
+- usageType
+- isp
+- domain
+- hostnames
+- countryName
+- totalReports
+- numDistinctUsers
+- lastReportedAt
