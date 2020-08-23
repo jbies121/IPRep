@@ -8,6 +8,10 @@ Supporting multiple APIs allows users to access fresh and diverse reputation sou
 
 This project aims to stay lightweight and platform independent.
 
+### Supported APIs
+- AbuseIPDB
+  - CHECK endpoint
+
 ### Usage
 From a built executable:
 ```powershell
@@ -20,15 +24,15 @@ dotnet run [ip] [info]
 ```
 
 ### 'info' options currently available
-isPublic
-ipVersion
-isWhitelisted
-countryCode
-usageType
-isp
-domain
-hostnames
-countryName
-totalReports
-numDistinctUsers
-lastReportedAt
+-isPublic
+-ipVersion
+-isWhitelisted
+-countryCode
+-usageType
+-isp
+-domain
+-hostnames
+-countryName
+-totalReports
+-numDistinctUsers
+-lastReportedAt
