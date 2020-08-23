@@ -19,7 +19,7 @@ From within the project directory:
 dotnet run [ip] [info]
 ```
 
-###'info' options currently available
+### 'info' options currently available
 isPublic
 ipVersion
 isWhitelisted
