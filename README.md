@@ -13,17 +13,26 @@ This project aims to stay lightweight and platform independent.
   - CHECK endpoint
 
 ### Usage
-From a built executable:
+From an executable:
 ```powershell
-.\iprep.exe [ip] [info]
+.\iprep.exe [ip] [info] [-service]
 ```
 
 From within the project directory:
 ```powershell 
-dotnet run [ip] [info]
+dotnet run [ip] [info] [-service]
 ```
 
+### Example
+```powershell
+.\iprep.exe 8.8.8.8 score -AIPDB
+```
+
+### 'service' options currently available
+- -AIPDB : AbuseIPDB
+
 ### 'info' options currently available
+- score
 - isPublic
 - ipVersion
 - isWhitelisted
