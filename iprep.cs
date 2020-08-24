@@ -39,13 +39,21 @@ namespace iprep
 
         public static async Task Main(string[] args)
         {
-            string[] query = new string[2];
+            string[] query = new string[3];
             bool ask = false;
 
-            string help = @"Usage: <ip address> <info>
+            string help = @"
+IPRep v0.1.0 | .NET Core 3.1 | by jbies121
+Usage: <ip address> [info] -[service]
+Example: .\iprep.exe 8.8.8.8 score -AIPDB
+
+<service>
+-----
+-AIPDB : AbuseIPDB
 
 <info>
 -----
+score
 isPublic
 ipVersion
 isWhitelisted
@@ -73,13 +81,37 @@ lastReportedAt";
                     {
                         Console.WriteLine("Need an IP, goober.");
                     }
-                    if (args.Length == 2)
+                    if (args.Length > 1)
                     {
-                        query[1] = args[1];
+                        if (args[1].StartsWith('-'))
+                        {
+                            // Choose service
+                            query[2] = args[1];
+                        }
+                        else
+                        {
+                            query[1] = args[1];
+                        }
+                        if (args.Length > 2)
+                        {
+                            if (args[2].StartsWith('-'))
+                            {
+                                // Choose service
+                                query[2] = args[2];
+                            }
+                            else
+                            {
+                                query[1] = args[2];
+                            }
+                        }
                     }
-                    else
+                    if (query[1] == null)
                     {
                         query[1] = "null";
+                    }
+                    if (query[2] == null)
+                    {
+                        query[2] = "-AIPDB";
                     }
                 }
                 else
@@ -92,20 +124,21 @@ lastReportedAt";
                 Console.WriteLine(help);
             }
 
-            if (ask)
+            if (ask == true && query[2] == "-AIPDB")
             {
                 try
                 {
                     //Make request and get response as deserialized json object
                     var repositories = await AbuseIPDBCheck(query[0]);
 
-                    //Create a report
+                    //Create a report. 'repositories' should be passed to a method that returns report, this is a bad place holder.
                     string[] report = { "## IP Address ##", repositories.data.ipAddress + "\n", "## Is Public? ##", repositories.data.isPublic + "\n", "## IP Version ##", repositories.data.ipVersion.ToString() + "\n", "## Is White Listed? ##", repositories.data.isWhitelisted + "\n", "## Abuse Confidence Score ##", repositories.data.abuseConfidenceScore.ToString() + "\n", "## Country Code ##", repositories.data.countryCode + "\n", "## Usage Type ##", repositories.data.usageType + "\n", "## ISP ##", repositories.data.isp + "\n", "## Domain ##", repositories.data.domain + "\n", "## Country Name ##", repositories.data.countryName + "\n", "## Total Reports ##", repositories.data.totalReports.ToString() + "\n", "## Number of Distinct Users ##", repositories.data.numDistinctUsers.ToString() + "\n", "## Last Reported At ##", repositories.data.lastReportedAt + "\n" };
                     
 
                     //user supplied arguments
                     var actions = new Dictionary<string, Action>
                 {
+                    { "score", () => Console.WriteLine(repositories.data.abuseConfidenceScore) },
                     { "country", () => Console.WriteLine(repositories.data.countryName) },
                     { "isPublic", () => Console.WriteLine(repositories.data.isPublic) },
                     { "ipVersion", () => Console.WriteLine(repositories.data.ipVersion) },

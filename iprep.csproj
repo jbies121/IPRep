@@ -3,6 +3,12 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <PackageId>IPRep</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>jbies121</Authors>
+    <Company>GitHub</Company>
+    <PackageDescription>This package adds an Octocat!</PackageDescription>
+    <RepositoryUrl>https://github.com/jbies121/iprep</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>

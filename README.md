@@ -1,6 +1,7 @@
 # iprep 
-### ![.NET Core](https://github.com/jbies121/iprep/workflows/.NET%20Core/badge.svg) master
-### ![.NET Core](https://github.com/jbies121/iprep/workflows/.NET%20Core/badge.svg?branch=key-management) key-management
+![.NET Core](https://github.com/jbies121/iprep/workflows/.NET%20Core/badge.svg) master
+
+![.NET Core](https://github.com/jbies121/iprep/workflows/.NET%20Core/badge.svg?branch=key-management) key-management
 ## IP Reputation tool for .NET Core 3.1
 This tool was developed with the blue team in mind to quickly determine IP origin and reputation.
 Using user supplied API keys, IP addresses and ranges can be checked against reputation services quickly and consumed in a usable way.
@@ -13,17 +14,26 @@ This project aims to stay lightweight and platform independent.
   - CHECK endpoint
 
 ### Usage
-From a built executable:
+From an executable:
 ```powershell
-.\iprep.exe [ip] [info]
+.\iprep.exe [ip] [info] [-service]
 ```
 
 From within the project directory:
 ```powershell 
-dotnet run [ip] [info]
+dotnet run [ip] [info] [-service]
 ```
 
+### Example
+```powershell
+.\iprep.exe 8.8.8.8 score -AIPDB
+```
+
+### 'service' options currently available
+- -AIPDB : AbuseIPDB
+
 ### 'info' options currently available
+- score
 - isPublic
 - ipVersion
 - isWhitelisted
