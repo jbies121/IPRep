@@ -137,7 +137,7 @@ lastReportedAt";
                     
 
                     //user supplied arguments
-                    var actions = new Dictionary<string, Action>
+                    var Actions = new Dictionary<string, Action>
                 {
                     { "score", () => Console.WriteLine(Repositories.data.abuseConfidenceScore) },
                     { "country", () => Console.WriteLine(Repositories.data.countryName) },
@@ -156,7 +156,7 @@ lastReportedAt";
                     { "null", () => Array.ForEach(Report, Console.WriteLine) }
                 };
 
-                    actions[Query[1]]();
+                    Actions[Query[1]]();
                 }
                 catch (NullReferenceException)
                 {
