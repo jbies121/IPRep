@@ -5,7 +5,7 @@
 
 namespace IPRep
 {
-    public class AIPDB_Check_Report
+    public class AIPDBCheckReport
     {
 
         public string reportedAt { get; set; }

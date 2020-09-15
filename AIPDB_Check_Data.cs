@@ -4,7 +4,7 @@
 // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse); 
 namespace IPRep
 {
-    public class AIPDB_Check_Data
+    public class AIPDBCheckData
     {
 
         public string ipAddress { get; set; }
@@ -35,7 +35,7 @@ namespace IPRep
 
         public string lastReportedAt { get; set; }
 
-        public List<AIPDB_Check_Report> reports { get; set; }
+        public List<AIPDBCheckReport> reports { get; set; }
     }
 
 }

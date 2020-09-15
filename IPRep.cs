@@ -10,41 +10,41 @@ namespace IPRep
 {
     class Program
     {
-        private static readonly HttpClient client = new HttpClient();
-        private static async Task<AIPDB_Check_Root> AbuseIPDBCheck(string ip)
+        private static readonly HttpClient Client = new HttpClient();
+        private static async Task<AIPDBCheckRoot> AbuseIPDBCheck(string ip)
         {
-            HttpResponseMessage resp; //init response message obj
+            HttpResponseMessage Resp; //init response message obj
 
             APIKeyRing MyKey = new APIKeyRing();
 
             //set default headers for the httpclient. Might want to change this to be set by req
-            client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Accept.Add(
+            Client.DefaultRequestHeaders.Accept.Clear();
+            Client.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));
-            client.DefaultRequestHeaders.Add("User-Agent", "IPRep v1.0");
+            Client.DefaultRequestHeaders.Add("User-Agent", "IPRep v1.0");
 
             //build request uri
-            string uri = "https://api.abuseipdb.com/api/v2/check?ipAddress=" + ip + "&maxAgeInDays=90&verbose=";
+            string URI = "https://api.abuseipdb.com/api/v2/check?ipAddress=" + ip + "&maxAgeInDays=90&verbose=";
 
             //init request message obj
-            var req = new HttpRequestMessage(HttpMethod.Get, uri);
-            req.Headers.Add("Key", MyKey.AIPDBKey);
+            var Req = new HttpRequestMessage(HttpMethod.Get, URI);
+            Req.Headers.Add("Key", MyKey.AIPDBKey);
 
             //Send request async through httpclient
-            resp = await client.SendAsync(req);
-            var responseBody = await resp.Content.ReadAsStringAsync();
+            Resp = await Client.SendAsync(Req);
+            var ResponseBody = await Resp.Content.ReadAsStringAsync();
 
-            AIPDB_Check_Root repositories = JsonConvert.DeserializeObject<AIPDB_Check_Root>(responseBody);
+            AIPDBCheckRoot Repositories = JsonConvert.DeserializeObject<AIPDBCheckRoot>(ResponseBody);
 
-            return repositories;
+            return Repositories;
         }
 
         public static async Task Main(string[] args)
         {
-            string[] query = new string[3];
-            bool ask = false;
+            string[] Query = new string[3];
+            bool Ask = false;
 
-            string help = @"
+            string Help = @"
 IPRep v0.1.0 | .NET Core 3.1 | by jbies121
 Usage: <ip address> [info] -[service]
 Example: .\iprep.exe 8.8.8.8 score -AIPDB
@@ -76,8 +76,8 @@ lastReportedAt";
                 {
                     if (IPAddress.TryParse(args[0], out IPAddress ip))
                     {
-                        query[0] = args[0];
-                        ask = true;
+                        Query[0] = args[0];
+                        Ask = true;
                     }
                     else
                     {
@@ -88,76 +88,76 @@ lastReportedAt";
                         if (args[1].StartsWith('-'))
                         {
                             // Choose service
-                            query[2] = args[1];
+                            Query[2] = args[1];
                         }
                         else
                         {
-                            query[1] = args[1];
+                            Query[1] = args[1];
                         }
                         if (args.Length > 2)
                         {
                             if (args[2].StartsWith('-'))
                             {
                                 // Choose service
-                                query[2] = args[2];
+                                Query[2] = args[2];
                             }
                             else
                             {
-                                query[1] = args[2];
+                                Query[1] = args[2];
                             }
                         }
                     }
-                    if (query[1] == null)
+                    if (Query[1] == null)
                     {
-                        query[1] = "null";
+                        Query[1] = "null";
                     }
-                    if (query[2] == null)
+                    if (Query[2] == null)
                     {
-                        query[2] = "-AIPDB";
+                        Query[2] = "-AIPDB";
                     }
                 }
                 else
                 {
-                    Console.WriteLine(help);
+                    Console.WriteLine(Help);
                 }
             }
             else
             {
-                Console.WriteLine(help);
+                Console.WriteLine(Help);
             }
 
-            if (ask == true && query[2] == "-AIPDB")
+            if (Ask == true && Query[2] == "-AIPDB")
             {
                 try
                 {
                     //Make request and get response as deserialized json object
-                    var repositories = await AbuseIPDBCheck(query[0]);
+                    var Repositories = await AbuseIPDBCheck(Query[0]);
 
                     //Create a report. 'repositories' should be passed to a method that returns report, this is a bad place holder.
-                    string[] report = { "## IP Address ##", repositories.data.ipAddress + "\n", "## Is Public? ##", repositories.data.isPublic + "\n", "## IP Version ##", repositories.data.ipVersion.ToString() + "\n", "## Is White Listed? ##", repositories.data.isWhitelisted + "\n", "## Abuse Confidence Score ##", repositories.data.abuseConfidenceScore.ToString() + "\n", "## Country Code ##", repositories.data.countryCode + "\n", "## Usage Type ##", repositories.data.usageType + "\n", "## ISP ##", repositories.data.isp + "\n", "## Domain ##", repositories.data.domain + "\n", "## Country Name ##", repositories.data.countryName + "\n", "## Total Reports ##", repositories.data.totalReports.ToString() + "\n", "## Number of Distinct Users ##", repositories.data.numDistinctUsers.ToString() + "\n", "## Last Reported At ##", repositories.data.lastReportedAt + "\n" };
+                    string[] Report = { "## IP Address ##", Repositories.data.ipAddress + "\n", "## Is Public? ##", Repositories.data.isPublic + "\n", "## IP Version ##", Repositories.data.ipVersion.ToString() + "\n", "## Is White Listed? ##", Repositories.data.isWhitelisted + "\n", "## Abuse Confidence Score ##", Repositories.data.abuseConfidenceScore.ToString() + "\n", "## Country Code ##", Repositories.data.countryCode + "\n", "## Usage Type ##", Repositories.data.usageType + "\n", "## ISP ##", Repositories.data.isp + "\n", "## Domain ##", Repositories.data.domain + "\n", "## Country Name ##", Repositories.data.countryName + "\n", "## Total Reports ##", Repositories.data.totalReports.ToString() + "\n", "## Number of Distinct Users ##", Repositories.data.numDistinctUsers.ToString() + "\n", "## Last Reported At ##", Repositories.data.lastReportedAt + "\n" };
                     
 
                     //user supplied arguments
                     var actions = new Dictionary<string, Action>
                 {
-                    { "score", () => Console.WriteLine(repositories.data.abuseConfidenceScore) },
-                    { "country", () => Console.WriteLine(repositories.data.countryName) },
-                    { "isPublic", () => Console.WriteLine(repositories.data.isPublic) },
-                    { "ipVersion", () => Console.WriteLine(repositories.data.ipVersion) },
-                    { "isWhitelisted", () => Console.WriteLine(repositories.data.isWhitelisted) },
-                    { "countryCode", () => Console.WriteLine(repositories.data.countryCode) },
-                    { "usageType", () => Console.WriteLine(repositories.data.usageType) },
-                    { "isp", () => Console.WriteLine(repositories.data.isp) },
-                    { "domain", () => Console.WriteLine(repositories.data.domain) },
-                    { "hostnames", () => repositories.data.hostnames.ForEach(Console.WriteLine) },
-                    { "countryName", () => Console.WriteLine(repositories.data.countryName) },
-                    { "totalReports", () => Console.WriteLine(repositories.data.totalReports) },
-                    { "numDistinctUsers", () => Console.WriteLine(repositories.data.numDistinctUsers) },
-                    { "lastReportedAt", () => Console.WriteLine(repositories.data.lastReportedAt) },
-                    { "null", () => Array.ForEach(report, Console.WriteLine) }
+                    { "score", () => Console.WriteLine(Repositories.data.abuseConfidenceScore) },
+                    { "country", () => Console.WriteLine(Repositories.data.countryName) },
+                    { "isPublic", () => Console.WriteLine(Repositories.data.isPublic) },
+                    { "ipVersion", () => Console.WriteLine(Repositories.data.ipVersion) },
+                    { "isWhitelisted", () => Console.WriteLine(Repositories.data.isWhitelisted) },
+                    { "countryCode", () => Console.WriteLine(Repositories.data.countryCode) },
+                    { "usageType", () => Console.WriteLine(Repositories.data.usageType) },
+                    { "isp", () => Console.WriteLine(Repositories.data.isp) },
+                    { "domain", () => Console.WriteLine(Repositories.data.domain) },
+                    { "hostnames", () => Repositories.data.hostnames.ForEach(Console.WriteLine) },
+                    { "countryName", () => Console.WriteLine(Repositories.data.countryName) },
+                    { "totalReports", () => Console.WriteLine(Repositories.data.totalReports) },
+                    { "numDistinctUsers", () => Console.WriteLine(Repositories.data.numDistinctUsers) },
+                    { "lastReportedAt", () => Console.WriteLine(Repositories.data.lastReportedAt) },
+                    { "null", () => Array.ForEach(Report, Console.WriteLine) }
                 };
 
-                    actions[query[1]]();
+                    actions[Query[1]]();
                 }
                 catch (NullReferenceException)
                 {

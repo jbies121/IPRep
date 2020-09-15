@@ -3,9 +3,9 @@
 
 namespace IPRep
 {
-    public class AIPDB_Check_Root
+    public class AIPDBCheckRoot
     {
-        public AIPDB_Check_Data data { get; set; }
+        public AIPDBCheckData data { get; set; }
     }
 
 
