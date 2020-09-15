@@ -19,8 +19,7 @@ namespace IPRep
 
             //set default headers for the httpclient. Might want to change this to be set by req
             Client.DefaultRequestHeaders.Accept.Clear();
-            Client.DefaultRequestHeaders.Accept.Add(
-                new MediaTypeWithQualityHeaderValue("application/json"));
+            Client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             Client.DefaultRequestHeaders.Add("User-Agent", "IPRep v1.0");
 
             //build request uri
