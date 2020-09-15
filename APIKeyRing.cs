@@ -5,7 +5,8 @@ namespace IPRep
 	{
         internal APIKeyRing()
 		{
-			AIPDBKey = "Not Set";
+            AIPDBKey = System.Environment.GetEnvironmentVariable("AIPDBKey");
+			//If AIPDBKey env var doesn't exist, prompt user to set it.
 		}
 
 		internal string AIPDBKey { get; }
