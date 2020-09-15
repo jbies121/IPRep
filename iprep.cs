@@ -6,7 +6,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using Newtonsoft.Json;
 
-namespace iprep
+namespace IPRep
 {
     class Program
     {
@@ -14,6 +14,8 @@ namespace iprep
         private static async Task<AIPDB_Check_Root> AbuseIPDBCheck(string ip)
         {
             HttpResponseMessage resp; //init response message obj
+
+            APIKeyRing MyKey = new APIKeyRing();
 
             //set default headers for the httpclient. Might want to change this to be set by req
             client.DefaultRequestHeaders.Accept.Clear();
@@ -26,7 +28,7 @@ namespace iprep
 
             //init request message obj
             var req = new HttpRequestMessage(HttpMethod.Get, uri);
-            req.Headers.Add("Key", "GET_YOUR_OWN");
+            req.Headers.Add("Key", MyKey.AIPDBKey);
 
             //Send request async through httpclient
             resp = await client.SendAsync(req);
