@@ -1,7 +1,7 @@
 # IPRep 
-master: ![.NET Core](https://github.com/jbies121/iprep/workflows/.NET%20Core/badge.svg)
+![.NET Core](https://github.com/jbies121/iprep/workflows/.NET%20Core/badge.svg) : master
 
-APIKeyRing: ![.NET Core](https://github.com/jbies121/IPRep/workflows/.NET%20Core/badge.svg?branch=APIKeyRing)
+![.NET Core](https://github.com/jbies121/IPRep/workflows/.NET%20Core/badge.svg?branch=APIKeyRing) : APIKeyRing
 
 ## IP Reputation tool for .NET Core 3.1
 This tool was developed with the blue team in mind to quickly determine IP origin and reputation.
