@@ -1,7 +1,8 @@
 {
   "profiles": {
     "IPRep": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "commandLineArgs": "8.8.8.8"
     }
   }
 }
