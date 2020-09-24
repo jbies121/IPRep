@@ -1,47 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using Newtonsoft.Json;
-
-namespace IPRep
+﻿namespace IPRep
 {
-    class Program
-    {
-        private static readonly HttpClient client = new HttpClient();
-        private static async Task<AIPDBCheckRoot> AbuseIPDBCheck(string ip)
-        {
-            APIKeyRing mykey = new APIKeyRing();
+    using System;
+    using System.Collections.Generic;
+    using System.Net;
+    using System.Threading.Tasks;
 
-            //set default headers for the httpclient. Might want to change this to be set by req
-            client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            client.DefaultRequestHeaders.Add("User-Agent", "IPRep v1.0");
+    using AbuseIPDB;
 
-            //build request uri
-            string uri = "https://api.abuseipdb.com/api/v2/check?ipAddress=" + ip + "&maxAgeInDays=90&verbose=";
-
-            //init request message obj
-            HttpRequestMessage req = new HttpRequestMessage(HttpMethod.Get, uri);
-            req.Headers.Add("Key", mykey.AIPDBKey);
-
-            //Send request async through httpclient
-            HttpResponseMessage resp = await client.SendAsync(req);
-            string responseBody = await resp.Content.ReadAsStringAsync();
-
-            AIPDBCheckRoot repositories = JsonConvert.DeserializeObject<AIPDBCheckRoot>(responseBody);
-
-            return repositories;
-        }
-
-        public static async Task Main(string[] args)
-        {
-            string[] query = new string[3];
-            bool ask = false;
-
-            string help = @"
+    public partial class IPRep
+	{
+		public static string help = @"
 IPRep v0.1.0 | .NET Core 3.1 | by jbies121
 Usage: <ip address> [info] -[service]
 Example: .\iprep.exe 8.8.8.8 score -AIPDB
@@ -65,6 +33,13 @@ countryName
 totalReports
 numDistinctUsers
 lastReportedAt";
+
+		internal static async Task<bool> ProcessArgsAsync(string[] args)
+		{
+            string[] query = new string[3];
+            bool ask = false;
+
+
 
             //process arguments
             if (args.Length != 0)
@@ -115,12 +90,12 @@ lastReportedAt";
                 }
                 else
                 {
-                    Console.WriteLine(help);
+                    Console.WriteLine(IPRep.help);
                 }
             }
             else
             {
-                Console.WriteLine(help);
+                Console.WriteLine(IPRep.help);
             }
 
             if (ask == true && query[2] == "-AIPDB")
@@ -128,29 +103,29 @@ lastReportedAt";
                 try
                 {
                     //Make request and get response as deserialized json object
-                    var repositories = await AbuseIPDBCheck(query[0]);
+                    var repositories = await AbuseIpdb.AbuseIPDBCheck(query[0]);
 
                     //Create a report. 'repositories' should be passed to a method that returns report, this is a bad place holder.
-                    string[] report = { "## IP Address ##", repositories.data.ipAddress + "\n", "## Is Public? ##", repositories.data.isPublic + "\n", "## IP Version ##", repositories.data.ipVersion.ToString() + "\n", "## Is White Listed? ##", repositories.data.isWhitelisted + "\n", "## Abuse Confidence Score ##", repositories.data.abuseConfidenceScore.ToString() + "\n", "## Country Code ##", repositories.data.countryCode + "\n", "## Usage Type ##", repositories.data.usageType + "\n", "## ISP ##", repositories.data.isp + "\n", "## Domain ##", repositories.data.domain + "\n", "## Country Name ##", repositories.data.countryName + "\n", "## Total Reports ##", repositories.data.totalReports.ToString() + "\n", "## Number of Distinct Users ##", repositories.data.numDistinctUsers.ToString() + "\n", "## Last Reported At ##", repositories.data.lastReportedAt + "\n" };
+                    string[] report = { "## IP Address ##", repositories.Data.IpAddress + "\n", "## Is Public? ##", repositories.Data.IsPublic + "\n", "## IP Version ##", repositories.Data.IpVersion.ToString() + "\n", "## Is White Listed? ##", repositories.Data.IsWhitelisted + "\n", "## Abuse Confidence Score ##", repositories.Data.AbuseConfidenceScore.ToString() + "\n", "## Country Code ##", repositories.Data.CountryCode + "\n", "## Usage Type ##", repositories.Data.UsageType + "\n", "## ISP ##", repositories.Data.Isp + "\n", "## Domain ##", repositories.Data.Domain + "\n", "## Country Name ##", repositories.Data.CountryName + "\n", "## Total Reports ##", repositories.Data.TotalReports.ToString() + "\n", "## Number of Distinct Users ##", repositories.Data.NumDistinctUsers.ToString() + "\n", "## Last Reported At ##", repositories.Data.LastReportedAt + "\n" };
 
 
                     //user supplied arguments
                     Dictionary<string, Action> actions = new Dictionary<string, Action>
                 {
-                    { "score", () => Console.WriteLine(repositories.data.abuseConfidenceScore) },
-                    { "country", () => Console.WriteLine(repositories.data.countryName) },
-                    { "isPublic", () => Console.WriteLine(repositories.data.isPublic) },
-                    { "ipVersion", () => Console.WriteLine(repositories.data.ipVersion) },
-                    { "isWhitelisted", () => Console.WriteLine(repositories.data.isWhitelisted) },
-                    { "countryCode", () => Console.WriteLine(repositories.data.countryCode) },
-                    { "usageType", () => Console.WriteLine(repositories.data.usageType) },
-                    { "isp", () => Console.WriteLine(repositories.data.isp) },
-                    { "domain", () => Console.WriteLine(repositories.data.domain) },
-                    { "hostnames", () => repositories.data.hostnames.ForEach(Console.WriteLine) },
-                    { "countryName", () => Console.WriteLine(repositories.data.countryName) },
-                    { "totalReports", () => Console.WriteLine(repositories.data.totalReports) },
-                    { "numDistinctUsers", () => Console.WriteLine(repositories.data.numDistinctUsers) },
-                    { "lastReportedAt", () => Console.WriteLine(repositories.data.lastReportedAt) },
+                    { "score", () => Console.WriteLine(repositories.Data.AbuseConfidenceScore) },
+                    { "country", () => Console.WriteLine(repositories.Data.CountryName) },
+                    { "isPublic", () => Console.WriteLine(repositories.Data.IsPublic) },
+                    { "ipVersion", () => Console.WriteLine(repositories.Data.IpVersion) },
+                    { "isWhitelisted", () => Console.WriteLine(repositories.Data.IsWhitelisted) },
+                    { "countryCode", () => Console.WriteLine(repositories.Data.CountryCode) },
+                    { "usageType", () => Console.WriteLine(repositories.Data.UsageType) },
+                    { "isp", () => Console.WriteLine(repositories.Data.Isp) },
+                    { "domain", () => Console.WriteLine(repositories.Data.Domain) },
+                    { "hostnames", () => Array.ForEach(repositories.Data.Hostnames, Console.WriteLine) },
+                    { "countryName", () => Console.WriteLine(repositories.Data.CountryName) },
+                    { "totalReports", () => Console.WriteLine(repositories.Data.TotalReports) },
+                    { "numDistinctUsers", () => Console.WriteLine(repositories.Data.NumDistinctUsers) },
+                    { "lastReportedAt", () => Console.WriteLine(repositories.Data.LastReportedAt) },
                     { "null", () => Array.ForEach(report, Console.WriteLine) }
                 };
 
@@ -160,10 +135,17 @@ lastReportedAt";
                 {
                     Console.WriteLine("There was an error with your query. Check the IP address and API key and try again.");
                 }
-                
+                catch (KeyNotFoundException)
+                {
+                    Console.WriteLine("The <info> argument supplied is not valid.");
+                }
 
-                
+
+
             }
-        }
-    }
+
+            return true;
+		}
+	}
 }
+
