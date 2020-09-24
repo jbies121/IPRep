@@ -1,10 +1,12 @@
 # IPRep 
 master
+
 ![.NET Core](https://github.com/jbies121/iprep/workflows/.NET%20Core/badge.svg)
 
 ![CodeQL](https://github.com/jbies121/IPRep/workflows/CodeQL/badge.svg?branch=master)
 
 APIKeyRing
+
 ![.NET Core](https://github.com/jbies121/IPRep/workflows/.NET%20Core/badge.svg?branch=APIKeyRing)
 
 ## IP Reputation tool for .NET Core 3.1
