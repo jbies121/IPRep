@@ -5,6 +5,8 @@ master
 
 ![CodeQL](https://github.com/jbies121/IPRep/workflows/CodeQL/badge.svg?branch=master)
 
+![SL Scan](https://github.com/jbies121/IPRep/workflows/SL%20Scan/badge.svg?branch=master)
+
 APIKeyRing
 
 ![.NET Core](https://github.com/jbies121/IPRep/workflows/.NET%20Core/badge.svg?branch=APIKeyRing)
